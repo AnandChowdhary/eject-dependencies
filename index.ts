@@ -1,5 +1,6 @@
 import { join } from "path";
 import { readJson, pathExists, ensureDir, copy } from "fs-extra";
+import fg from "fast-glob";
 
 /**
  * `console.log` messages if in development environment
