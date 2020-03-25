@@ -28,7 +28,6 @@ export interface EjectSettings {
 export const eject = async (settings: EjectSettings = {}) => {
   const nodeModulesDir = settings.sourceDir || join(".", "node_modules");
   const destDir = settings.destDir || join(".", "ejected");
-  const pathToNodeModules = (nodeModulesDir.match(/\//g) || []).length;
   const codeFiles = settings.codeFiles || [
     "src/**/*.{js,jsx,ts,tsx,mjs,es,es6}",
     "*.{js,jsx,ts,tsx,mjs,es,es6}"
@@ -53,14 +52,15 @@ export const eject = async (settings: EjectSettings = {}) => {
   for await (const file of files) {
     let contents = await readFile(join(".", file), "utf-8");
     const pathToSource = (join(".", file).match(/\//g) || []).length;
-    console.log(pathToSource, pathToNodeModules);
 
     let has = false;
     for (const dependency of Object.keys(pkg.dependencies)) {
       if (contents.includes(dependency)) has = true;
       contents = contents.replace(
         `"${dependency}"`,
-        `"./${destDir}/${dependency}"`
+        `"${
+          pathToSource > 0 ? "../".repeat(pathToSource) : "./"
+        }${destDir}/${dependency}"`
       );
     }
 
@@ -70,4 +70,4 @@ export const eject = async (settings: EjectSettings = {}) => {
   }
 };
 
-eject();
+eject({ destDir: join(".", "path", "to", "ejected") });
