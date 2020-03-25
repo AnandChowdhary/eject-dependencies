@@ -1,6 +1,6 @@
 # 🪂 Eject dependencies
 
-Opinionated starter for server-side Node.js libraries, with [TypeScript](https://github.com/microsoft/TypeScript), tests with [Jest](https://github.com/facebook/jest), automated releases with [GitHub Actions](https://github.com/features/actions) and [Semantic Release](https://github.com/semantic-release/semantic-release), and coverage reporting from [Travis CI](https://travis-ci.org) to [Coveralls](https://coveralls.io).
+If you have dependencies in your `node_modules` folder, this package copies them to your source directory and changes all import references. It's like create-react-app's `eject` function but for all or some dependencies.
 
 [![Node CI](https://img.shields.io/github/workflow/status/AnandChowdhary/eject-dependencies/Node%20CI?label=GitHub%20CI&logo=github)](https://github.com/AnandChowdhary/eject-dependencies/actions)
 [![Travis CI](https://img.shields.io/travis/AnandChowdhary/eject-dependencies?label=Travis%20CI&logo=travis%20ci&logoColor=%23fff)](https://travis-ci.org/AnandChowdhary/eject-dependencies)
@@ -29,6 +29,9 @@ Use the CLI:
 
 ```bash
 eject-dependencies
+
+# With configuration (see options below)
+eject-dependencies --source-dir './node_modules'
 ```
 
 Or, use without installation using `npx`:
@@ -37,13 +40,29 @@ Or, use without installation using `npx`:
 npx eject-dependencies
 ```
 
-Or, use programmatically:
+Or, use programmatically with the API:
 
 ```ts
 import { eject } from "eject-dependencies";
 
+// Default
 eject();
+
+// With configuration
+eject({ sourceDir: "./node_modules" });
 ```
+
+## Configuration
+
+| Option                  | Description                               | Example value                  |
+| ----------------------- | ----------------------------------------- | ------------------------------ |
+| `sourceDir`             | `string` with dependencies dir            | `"./node_modules"`             |
+| `destDir`               | `string` with dir to copy in              | `"./ejected"`                  |
+| `codeFiles`             | `string[]` with glob files                | `["src/**/*.{js,jsx"]`         |
+| `updateTestFiles`       | `boolean` to also update specfiles        | `true`                         |
+| `dependenciesFilter` 📦 | `Function` to filter dependencies (`Set`) | `dependencies => dependencies` |
+
+_📦 → This option is only supported by the API, not the CLI_
 
 ## 👩‍💻 Development
 
