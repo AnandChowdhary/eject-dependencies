@@ -1,10 +1,13 @@
 import { eject } from "./index";
 import { pathExists, readFile, writeFile, remove, ensureDir } from "fs-extra";
 
-let originalCode: string;
+let originalIndexTS: string;
+let originalIndexSpecTS: string;
+
 describe("eject-dependencies", () => {
   beforeAll(async () => {
-    originalCode = await readFile("./index.ts", "utf8");
+    originalIndexTS = await readFile("./index.ts", "utf8");
+    originalIndexSpecTS = await readFile("./index.spec.ts", "utf8");
     await ensureDir("./ejected");
     await remove("./ejected");
   });
@@ -45,12 +48,29 @@ describe("eject-dependencies", () => {
     expect(destDirFile.includes(`from "./path/to/ejected`)).toBeTruthy();
   });
 
+  it("updates specfile", async () => {
+    await eject({ updateTestFiles: true });
+    const indexSpecFile = await readFile("./index.spec.ts", "utf8");
+    expect(indexSpecFile.includes(`from "./ejected`)).toBeTruthy();
+  });
+
+  it("updates nested file", async () => {
+    await ensureDir("./n/e/s/t/e");
+    await writeFile("./n/e/s/t/e/d.ts", `import { readFile } from "fs-extra"`);
+    await eject({ codeFiles: ["n/e/s/**/*.ts"] });
+    const destDirFile = await readFile("./n/e/s/t/e/d.ts", "utf8");
+    console.log(destDirFile);
+    expect(destDirFile.includes(`from "../../../`)).toBeTruthy();
+  });
+
   afterAll(async () => {
-    await writeFile("./index.ts", originalCode);
+    await writeFile("./index.ts", originalIndexTS);
+    await writeFile("./index.spec.ts", originalIndexSpecTS);
     await ensureDir("./ejected");
     await remove("./ejected");
     await remove("./path/to/ejected");
     await remove("./no-dependencies.js");
     await remove("./dest-dir.ts");
+    await remove("./n");
   });
 });
