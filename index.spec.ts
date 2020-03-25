@@ -14,7 +14,15 @@ describe("eject-dependencies", () => {
     expect(await pathExists("./ejected/fs-extra")).toBeTruthy();
   });
 
+  it("throws if node_modules is not found", () => {
+    eject({ sourceDir: "/404" })
+      .then(() => {})
+      .catch(error => expect(error).toBeDefined());
+  });
+
   afterAll(async () => {
     await writeFile("./index.ts", originalCode);
+    await ensureDir("./ejected/fs-extra");
+    await remove("./ejected/fs-extra");
   });
 });
