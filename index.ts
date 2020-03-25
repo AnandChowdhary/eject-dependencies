@@ -32,7 +32,7 @@ export const eject = async (settings: EjectSettings = {}) => {
 
   for await (const x of Object.keys(pkg.dependencies)) {
     log("Copying dependency", x);
-    await copy(join(nodeModulesDir, x), destDir);
+    await copy(join(nodeModulesDir, x), join(destDir, x));
   }
 };
 
