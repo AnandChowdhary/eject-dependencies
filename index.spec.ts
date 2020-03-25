@@ -5,8 +5,8 @@ let originalCode: string;
 describe("eject-dependencies", () => {
   beforeAll(async () => {
     originalCode = await readFile("./index.ts", "utf-8");
-    await ensureDir("./ejected/fs-extra");
-    await remove("./ejected/fs-extra");
+    await ensureDir("./ejected");
+    await remove("./ejected");
   });
 
   it("copies a dependency", async () => {
@@ -25,9 +25,16 @@ describe("eject-dependencies", () => {
     expect(result.updatedFiles).toEqual(new Set().add("index.ts"));
   });
 
+  it("returns updated dependencies", async () => {
+    const result = await eject();
+    expect(result.updatedDependencies).toEqual(
+      new Set().add("fast-glob").add("fs-extra")
+    );
+  });
+
   afterAll(async () => {
     await writeFile("./index.ts", originalCode);
-    await ensureDir("./ejected/fs-extra");
-    await remove("./ejected/fs-extra");
+    await ensureDir("./ejected");
+    await remove("./ejected");
   });
 });

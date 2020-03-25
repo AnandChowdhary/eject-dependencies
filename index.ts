@@ -34,6 +34,7 @@ export const eject = async (settings: EjectSettings = {}) => {
     "*.{js,jsx,ts,tsx,mjs,es,es6}"
   ];
   const updatedFiles = new Set<string>();
+  const updatedDependencies = new Set<string>();
 
   await ensureDir(destDir);
   if (!(await pathExists(nodeModulesDir)))
@@ -44,11 +45,7 @@ export const eject = async (settings: EjectSettings = {}) => {
       [index: string]: string;
     };
   } = await readJson(join(".", "package.json"));
-
-  for await (const dependency of Object.keys(pkg.dependencies)) {
-    await copy(join(nodeModulesDir, dependency), join(destDir, dependency));
-    log("Copied dependency", dependency);
-  }
+  let dependencies = Object.keys(pkg.dependencies);
 
   const files = (await fg(codeFiles)).filter(file =>
     settings.updateTestFiles
@@ -58,9 +55,20 @@ export const eject = async (settings: EjectSettings = {}) => {
 
   for await (const file of files) {
     let contents = await readFile(join(".", file), "utf-8");
+    for (const dependency of dependencies)
+      if (contents.includes(dependency)) updatedDependencies.add(dependency);
+  }
+
+  for await (const dependency of updatedDependencies) {
+    await copy(join(nodeModulesDir, dependency), join(destDir, dependency));
+    log("Copied dependency", dependency);
+  }
+
+  for await (const file of files) {
+    let contents = await readFile(join(".", file), "utf-8");
     const pathToSource = (join(".", file).match(/\//g) || []).length;
 
-    for (const dependency of Object.keys(pkg.dependencies)) {
+    for (const dependency of dependencies) {
       if (contents.includes(dependency)) updatedFiles.add(file);
       contents = contents.replace(
         `"${dependency}"`,
@@ -75,7 +83,7 @@ export const eject = async (settings: EjectSettings = {}) => {
     log("Updated file", file);
   }
 
-  return { updatedFiles };
+  return { updatedFiles, updatedDependencies };
 };
 
 // eject({ destDir: join(".", "path", "to", "ejected") });
