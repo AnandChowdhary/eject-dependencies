@@ -1,7 +1,7 @@
-import { nodeTs } from "./index";
+import { eject } from "./index";
 
 describe("node.ts", () => {
-  it("works", () => {
-    expect(nodeTs()).toBeTruthy();
+  it("works", async () => {
+    expect(await eject()).toBeTruthy();
   });
 });
