@@ -1,72 +1,48 @@
-# 🏷️ Node.ts
+# 🪂 Eject dependencies
 
 Opinionated starter for server-side Node.js libraries, with [TypeScript](https://github.com/microsoft/TypeScript), tests with [Jest](https://github.com/facebook/jest), automated releases with [GitHub Actions](https://github.com/features/actions) and [Semantic Release](https://github.com/semantic-release/semantic-release), and coverage reporting from [Travis CI](https://travis-ci.org) to [Coveralls](https://coveralls.io).
 
-[![Node CI](https://img.shields.io/github/workflow/status/AnandChowdhary/node.ts/Node%20CI?label=GitHub%20CI&logo=github)](https://github.com/AnandChowdhary/node.ts/actions)
-[![Travis CI](https://img.shields.io/travis/AnandChowdhary/node.ts?label=Travis%20CI&logo=travis%20ci&logoColor=%23fff)](https://travis-ci.org/AnandChowdhary/node.ts)
-[![Coverage](https://coveralls.io/repos/github/AnandChowdhary/node.ts/badge.svg?branch=master&v=2)](https://coveralls.io/github/AnandChowdhary/node.ts?branch=master)
-[![Dependencies](https://img.shields.io/librariesio/release/npm/@anandchowdhary/node.ts)](https://libraries.io/npm/@anandchowdhary%2Fnode.ts)
-[![License](https://img.shields.io/npm/l/@anandchowdhary/node.ts)](https://github.com/AnandChowdhary/node.ts/blob/master/LICENSE)
-[![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/@anandchowdhary/node.ts.svg)](https://snyk.io/test/npm/@anandchowdhary/node.ts)
-[![Based on Node.ts](https://img.shields.io/badge/based%20on-node.ts-brightgreen)](https://github.com/AnandChowdhary/node.ts)
-[![npm type definitions](https://img.shields.io/npm/types/@anandchowdhary/node.ts.svg)](https://unpkg.com/browse/@anandchowdhary/node.ts/dist/index.d.ts)
-[![npm package](https://img.shields.io/npm/v/@anandchowdhary/node.ts.svg)](https://www.npmjs.com/package/node.ts)
-[![npm downloads](https://img.shields.io/npm/dw/@anandchowdhary/node.ts)](https://www.npmjs.com/package/node.ts)
-[![Contributors](https://img.shields.io/github/contributors/AnandChowdhary/node.ts)](https://github.com/AnandChowdhary/node.ts/graphs/contributors)
+[![Node CI](https://img.shields.io/github/workflow/status/AnandChowdhary/eject-dependencies/Node%20CI?label=GitHub%20CI&logo=github)](https://github.com/AnandChowdhary/eject-dependencies/actions)
+[![Travis CI](https://img.shields.io/travis/AnandChowdhary/eject-dependencies?label=Travis%20CI&logo=travis%20ci&logoColor=%23fff)](https://travis-ci.org/AnandChowdhary/eject-dependencies)
+[![Coverage](https://coveralls.io/repos/github/AnandChowdhary/eject-dependencies/badge.svg?branch=master&v=2)](https://coveralls.io/github/AnandChowdhary/eject-dependencies?branch=master)
+[![Dependencies](https://img.shields.io/librariesio/release/npm/eject-dependencies)](https://libraries.io/npm/eject-dependencies)
+[![License](https://img.shields.io/npm/l/eject-dependencies)](https://github.com/AnandChowdhary/eject-dependencies/blob/master/LICENSE)
+[![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/eject-dependencies.svg)](https://snyk.io/test/npm/eject-dependencies)
+[![Based on Node.ts](https://img.shields.io/badge/based%20on-node.ts-brightgreen)](https://github.com/AnandChowdhary/eject-dependencies)
+[![npm type definitions](https://img.shields.io/npm/types/eject-dependencies.svg)](https://unpkg.com/browse/eject-dependencies/dist/index.d.ts)
+[![npm package](https://img.shields.io/npm/v/eject-dependencies.svg)](https://www.npmjs.com/package/node.ts)
+[![npm downloads](https://img.shields.io/npm/dw/eject-dependencies)](https://www.npmjs.com/package/node.ts)
+[![Contributors](https://img.shields.io/github/contributors/AnandChowdhary/eject-dependencies)](https://github.com/AnandChowdhary/eject-dependencies/graphs/contributors)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-[![npm](https://nodei.co/npm/@anandchowdhary/node.ts.png)](https://www.npmjs.com/package/@anandchowdhary/node.ts)
-
-## ⭐ Using Node.ts
-
-### Setting up repository
-
-To get started, first generate your new repository. There are two ways to do this:
-
-1. [Generate a repository with Node.ts template](https://github.com/AnandChowdhary/node.ts/generate) is GitHub's preferred way
-2. [Import this repository](https://github.com/new/import) keeps the commit history, which you may want
-
-### Updating `README.md`
-
-Make the following changes to this `README.md` (note that these changes are **case-sensitive**):
-
-1. Replace "Node.ts" with your project name
-2. Replace "AnandChowdhary/node.ts" with your GitHub "username/repository"
-3. Replace "@anandchowdhary/node.ts" with your npm package name
-4. Replace "@anandchowdhary%2Fnode.ts" with your npm package name, [URL-encoded](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI)
-
-### Updating `package.json`
-
-Make the following changes to `package.json`:
-
-1. Replace "@anandchowdhary/node.ts" with your npm package name
-2. Change the version to "0.0.0" for Semantic Release to take over
-3. Replace the description with your npm package description
-4. Replace "AnandChowdhary/node.ts" with your GitHub "username/repository"
-5. Replace "Anand Chowdhary <mail@anandchowdhary.com>" with you as the author
-6. Replace "anandchowdhary.github.io" with "username.github.io"
-
-### Last steps
-
-1. Add your npm token (`NPM_TOKEN`) as a GitHub secret in your repository ([more details](https://github.com/semantic-release/semantic-release/blob/master/docs/recipes/github-actions.md))
-2. Log in or sign up on [Coveralls](https://coveralls.io) and [add your repository](https://coveralls.io/repos/new)
-3. Remove this section ("Using Node.ts"), keeping the "Usage" section below
-4. Write commits messages using [Gitmoji](https://gitmoji.carloscuesta.me)
+[![npm](https://nodei.co/npm/eject-dependencies.png)](https://www.npmjs.com/package/eject-dependencies)
 
 ## 💡 Usage
 
-Install the package from [npm](https://www.npmjs.com/package/@anandchowdhary/node.ts):
+Install the package globally from [npm](https://www.npmjs.com/package/eject-dependencies):
 
 ```bash
-npm install @anandchowdhary/node.ts
+npm install --save-global eject-dependencies
 ```
 
-Import and use;
+Use the CLI:
+
+```bash
+eject-dependencies
+```
+
+Or, use without installation using `npx`:
+
+```bash
+npx eject-dependencies
+```
+
+Or, use programmatically:
 
 ```ts
-import { nodeTs } from "@anandchowdhary/node-ts";
+import { eject } from "eject-dependencies";
 
-nodeTs();
+eject();
 ```
 
 ## 👩‍💻 Development
