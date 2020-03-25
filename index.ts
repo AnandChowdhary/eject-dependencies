@@ -21,6 +21,7 @@ export interface EjectSettings {
   destDir?: string;
   codeFiles?: string[];
   updateTestFiles?: boolean;
+  dependenciesFilter?: (dependencies: Set<string>) => Set<string>;
 }
 
 /**
@@ -34,7 +35,7 @@ export const eject = async (settings: EjectSettings = {}) => {
     "*.{js,jsx,ts,tsx,mjs,es,es6}"
   ];
   const updatedFiles = new Set<string>();
-  const updatedDependencies = new Set<string>();
+  let updatedDependencies = new Set<string>();
 
   await ensureDir(destDir);
   if (!(await pathExists(nodeModulesDir)))
@@ -59,6 +60,9 @@ export const eject = async (settings: EjectSettings = {}) => {
       if (contents.includes(dependency)) updatedDependencies.add(dependency);
   }
 
+  if (settings.dependenciesFilter)
+    updatedDependencies = settings.dependenciesFilter(updatedDependencies);
+
   for await (const dependency of updatedDependencies) {
     await copy(join(nodeModulesDir, dependency), join(destDir, dependency));
     log("Copied dependency", dependency);
@@ -68,7 +72,7 @@ export const eject = async (settings: EjectSettings = {}) => {
     let contents = await readFile(join(".", file), "utf8");
     const pathToSource = (join(".", file).match(/\//g) || []).length;
 
-    for (const dependency of dependencies) {
+    for (const dependency of updatedDependencies) {
       if (contents.includes(dependency)) updatedFiles.add(file);
       contents = contents.replace(
         `"${dependency}"`,
@@ -85,5 +89,3 @@ export const eject = async (settings: EjectSettings = {}) => {
 
   return { updatedFiles, updatedDependencies };
 };
-
-// eject({ destDir: join(".", "path", "to", "ejected") });

@@ -63,6 +63,27 @@ describe("eject-dependencies", () => {
     expect(destDirFile.includes(`from "../../../`)).toBeTruthy();
   });
 
+  it("updates with dependencies filter", async () => {
+    await writeFile(
+      "./filter.ts",
+      `import { readFile } from "fs-extra";
+      import fg from "fast-glob";`
+    );
+    await eject({
+      codeFiles: ["./filter.ts"],
+      dependenciesFilter: files => {
+        files.delete("fast-glob");
+        return files;
+      }
+    });
+    const filterFile = await readFile("./filter.ts", "utf8");
+    console.log(filterFile);
+    expect(
+      filterFile.includes(`import { readFile } from "./ejected/fs-extra"`)
+    ).toBeTruthy();
+    expect(filterFile.includes(`import fg from "fast-glob"`)).toBeTruthy();
+  });
+
   afterAll(async () => {
     await writeFile("./index.ts", originalIndexTS);
     await writeFile("./index.spec.ts", originalIndexSpecTS);
@@ -72,5 +93,6 @@ describe("eject-dependencies", () => {
     await remove("./no-dependencies.js");
     await remove("./dest-dir.ts");
     await remove("./n");
+    await remove("./filter.ts");
   });
 });
