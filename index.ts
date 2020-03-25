@@ -9,13 +9,6 @@ import {
 } from "fs-extra";
 import fg from "fast-glob";
 
-/**
- * `console.log` messages if in development environment
- * @param params - Messages to log
- */
-const log = (...params: any[]) =>
-  process.env.NODE_ENV === "development" && console.log(...params);
-
 export interface EjectSettings {
   sourceDir?: string;
   destDir?: string;
@@ -26,6 +19,7 @@ export interface EjectSettings {
 
 /**
  * Eject dependencies
+ * @param settings - Ejection settings
  */
 export const eject = async (settings: EjectSettings = {}) => {
   const nodeModulesDir = settings.sourceDir || join(".", "node_modules");
@@ -63,10 +57,8 @@ export const eject = async (settings: EjectSettings = {}) => {
   if (settings.dependenciesFilter)
     updatedDependencies = settings.dependenciesFilter(updatedDependencies);
 
-  for await (const dependency of updatedDependencies) {
+  for await (const dependency of updatedDependencies)
     await copy(join(nodeModulesDir, dependency), join(destDir, dependency));
-    log("Copied dependency", dependency);
-  }
 
   for await (const file of files) {
     let contents = await readFile(join(".", file), "utf8");
@@ -84,7 +76,6 @@ export const eject = async (settings: EjectSettings = {}) => {
 
     if (!updatedFiles.has(file)) continue;
     await writeFile(join(".", file), contents);
-    log("Updated file", file);
   }
 
   return { updatedFiles, updatedDependencies };
