@@ -20,6 +20,7 @@ export interface EjectSettings {
   sourceDir?: string;
   destDir?: string;
   codeFiles?: string[];
+  updateTestFiles?: boolean;
 }
 
 /**
@@ -48,7 +49,12 @@ export const eject = async (settings: EjectSettings = {}) => {
     log("Copied dependency", dependency);
   }
 
-  const files = await fg(codeFiles);
+  const files = (await fg(codeFiles)).filter(file =>
+    settings.updateTestFiles
+      ? true
+      : !(file.includes(".test.") || file.includes(".spec."))
+  );
+
   for await (const file of files) {
     let contents = await readFile(join(".", file), "utf-8");
     const pathToSource = (join(".", file).match(/\//g) || []).length;
