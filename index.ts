@@ -33,6 +33,7 @@ export const eject = async (settings: EjectSettings = {}) => {
     "src/**/*.{js,jsx,ts,tsx,mjs,es,es6}",
     "*.{js,jsx,ts,tsx,mjs,es,es6}"
   ];
+  const updatedFiles = new Set<string>();
 
   await ensureDir(destDir);
   if (!(await pathExists(nodeModulesDir)))
@@ -59,9 +60,8 @@ export const eject = async (settings: EjectSettings = {}) => {
     let contents = await readFile(join(".", file), "utf-8");
     const pathToSource = (join(".", file).match(/\//g) || []).length;
 
-    let has = false;
     for (const dependency of Object.keys(pkg.dependencies)) {
-      if (contents.includes(dependency)) has = true;
+      if (contents.includes(dependency)) updatedFiles.add(file);
       contents = contents.replace(
         `"${dependency}"`,
         `"${
@@ -70,10 +70,12 @@ export const eject = async (settings: EjectSettings = {}) => {
       );
     }
 
-    if (!has) continue;
+    if (!updatedFiles.has(file)) continue;
     await writeFile(join(".", file), contents);
     log("Updated file", file);
   }
+
+  return { updatedFiles };
 };
 
 // eject({ destDir: join(".", "path", "to", "ejected") });

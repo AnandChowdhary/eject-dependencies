@@ -20,6 +20,11 @@ describe("eject-dependencies", () => {
       .catch(error => expect(error).toBeDefined());
   });
 
+  it("returns updated files", async () => {
+    const result = await eject();
+    expect(result.updatedFiles).toEqual(new Set().add("index.ts"));
+  });
+
   afterAll(async () => {
     await writeFile("./index.ts", originalCode);
     await ensureDir("./ejected/fs-extra");
