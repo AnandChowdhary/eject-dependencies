@@ -41,7 +41,7 @@ describe("eject-dependencies", () => {
     expect(result.updatedDependencies.has("no-dependencies.js")).toBeFalsy();
   });
 
-  it("updates with dest dir", async () => {
+  it("updates with destination dir", async () => {
     await writeFile("./dest-dir.ts", `import { readFile } from "fs-extra"`);
     await eject({ destDir: "path/to/ejected" });
     const destDirFile = await readFile("./dest-dir.ts", "utf8");
@@ -59,8 +59,16 @@ describe("eject-dependencies", () => {
     await writeFile("./n/e/s/t/e/d.ts", `import { readFile } from "fs-extra"`);
     await eject({ codeFiles: ["n/e/s/**/*.ts"] });
     const destDirFile = await readFile("./n/e/s/t/e/d.ts", "utf8");
+    expect(destDirFile.includes(`from "../../../../../`)).toBeTruthy();
+  });
+
+  it("updates nested file with destination dir", async () => {
+    await ensureDir("./n/e/s/t/e");
+    await writeFile("./n/e/s/t/e/dest.ts", `import fg from "fast-glob"`);
+    await eject({ destDir: "path/to/", codeFiles: ["n/e/s/t/e/dest.ts"] });
+    const destDirFile = await readFile("./n/e/s/t/e/dest.ts", "utf8");
     console.log(destDirFile);
-    expect(destDirFile.includes(`from "../../../`)).toBeTruthy();
+    expect(destDirFile.includes(`from "../`)).toBeTruthy();
   });
 
   it("updates with dependencies filter", async () => {
@@ -77,7 +85,6 @@ describe("eject-dependencies", () => {
       }
     });
     const filterFile = await readFile("./filter.ts", "utf8");
-    console.log(filterFile);
     expect(
       filterFile.includes(`import { readFile } from "./ejected/fs-extra"`)
     ).toBeTruthy();
@@ -89,7 +96,7 @@ describe("eject-dependencies", () => {
     await writeFile("./index.spec.ts", originalIndexSpecTS);
     await ensureDir("./ejected");
     await remove("./ejected");
-    await remove("./path/to/ejected");
+    await remove("./path/to");
     await remove("./no-dependencies.js");
     await remove("./dest-dir.ts");
     await remove("./n");
