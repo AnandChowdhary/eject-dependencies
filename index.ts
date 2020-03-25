@@ -1,5 +1,12 @@
 import { join } from "path";
-import { readJson, pathExists, ensureDir, copy } from "fs-extra";
+import {
+  readJson,
+  pathExists,
+  ensureDir,
+  copy,
+  readFile,
+  writeFile
+} from "fs-extra";
 import fg from "fast-glob";
 
 /**
@@ -12,6 +19,7 @@ const log = (...params: any[]) =>
 export interface EjectSettings {
   sourceDir?: string;
   destDir?: string;
+  codeFiles?: string[];
 }
 
 /**
@@ -20,6 +28,10 @@ export interface EjectSettings {
 export const eject = async (settings: EjectSettings = {}) => {
   const nodeModulesDir = settings.sourceDir || join(".", "node_modules");
   const destDir = settings.destDir || join(".", "ejected");
+  const codeFiles = settings.codeFiles || [
+    "src/**/*.{js,jsx,ts,tsx,mjs,es,es6}",
+    "*.{js,jsx,ts,tsx,mjs,es,es6}"
+  ];
 
   await ensureDir(destDir);
   if (!(await pathExists(nodeModulesDir)))
@@ -31,9 +43,21 @@ export const eject = async (settings: EjectSettings = {}) => {
     };
   } = await readJson(join(".", "package.json"));
 
-  for await (const x of Object.keys(pkg.dependencies)) {
-    log("Copying dependency", x);
-    await copy(join(nodeModulesDir, x), join(destDir, x));
+  for await (const dependency of Object.keys(pkg.dependencies)) {
+    await copy(join(nodeModulesDir, dependency), join(destDir, dependency));
+    log("Copied dependency", dependency);
+  }
+
+  const files = await fg(codeFiles);
+  for await (const file of files) {
+    let contents = await readFile(join(".", file), "utf-8");
+    let has = false;
+    Object.keys(pkg.dependencies).forEach(dependency => {
+      if (contents.includes(dependency)) has = true;
+    });
+    if (!has) continue;
+    await writeFile(join(".", file), contents);
+    log("Updated file", file);
   }
 };
 
