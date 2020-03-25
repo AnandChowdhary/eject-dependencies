@@ -70,4 +70,4 @@ export const eject = async (settings: EjectSettings = {}) => {
   }
 };
 
-eject({ destDir: join(".", "path", "to", "ejected") });
+// eject({ destDir: join(".", "path", "to", "ejected") });
