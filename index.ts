@@ -54,7 +54,7 @@ export const eject = async (settings: EjectSettings = {}) => {
   );
 
   for await (const file of files) {
-    let contents = await readFile(join(".", file), "utf-8");
+    let contents = await readFile(join(".", file), "utf8");
     for (const dependency of dependencies)
       if (contents.includes(dependency)) updatedDependencies.add(dependency);
   }
@@ -65,7 +65,7 @@ export const eject = async (settings: EjectSettings = {}) => {
   }
 
   for await (const file of files) {
-    let contents = await readFile(join(".", file), "utf-8");
+    let contents = await readFile(join(".", file), "utf8");
     const pathToSource = (join(".", file).match(/\//g) || []).length;
 
     for (const dependency of dependencies) {

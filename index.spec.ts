@@ -4,7 +4,7 @@ import { pathExists, readFile, writeFile, remove, ensureDir } from "fs-extra";
 let originalCode: string;
 describe("eject-dependencies", () => {
   beforeAll(async () => {
-    originalCode = await readFile("./index.ts", "utf-8");
+    originalCode = await readFile("./index.ts", "utf8");
     await ensureDir("./ejected");
     await remove("./ejected");
   });
@@ -32,9 +32,25 @@ describe("eject-dependencies", () => {
     );
   });
 
+  it("does not update file without dependencies", async () => {
+    await writeFile("./no-dependencies.js", "//");
+    const result = await eject();
+    expect(result.updatedDependencies.has("no-dependencies.js")).toBeFalsy();
+  });
+
+  it("updates with dest dir", async () => {
+    await writeFile("./dest-dir.ts", `import { readFile } from "fs-extra"`);
+    await eject({ destDir: "path/to/ejected" });
+    const destDirFile = await readFile("./dest-dir.ts", "utf8");
+    expect(destDirFile.includes(`from "./path/to/ejected`)).toBeTruthy();
+  });
+
   afterAll(async () => {
     await writeFile("./index.ts", originalCode);
     await ensureDir("./ejected");
     await remove("./ejected");
+    await remove("./path/to/ejected");
+    await remove("./no-dependencies.js");
+    await remove("./dest-dir.ts");
   });
 });
