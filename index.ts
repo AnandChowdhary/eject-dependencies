@@ -51,10 +51,13 @@ export const eject = async (settings: EjectSettings = {}) => {
   const files = await fg(codeFiles);
   for await (const file of files) {
     let contents = await readFile(join(".", file), "utf-8");
+
     let has = false;
-    Object.keys(pkg.dependencies).forEach(dependency => {
+    for (const dependency of Object.keys(pkg.dependencies)) {
       if (contents.includes(dependency)) has = true;
-    });
+      contents = contents.replace(`"${dependency}"`, `"./${dependency}"`);
+    }
+
     if (!has) continue;
     await writeFile(join(".", file), contents);
     log("Updated file", file);
