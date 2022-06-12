@@ -38,7 +38,7 @@
   "homepage": "https://anandchowdhary.github.io/eject-dependencies/",
   "dependencies": {
     "fast-glob": "^3.2.2",
-    "fs-extra": "^9.0.0"
+    "fs-extra": "^10.0.0"
   },
   "devDependencies": {
     "@semantic-release/git": "^9.0.0",
