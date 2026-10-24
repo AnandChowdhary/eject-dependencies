@@ -25,8 +25,25 @@ jobs:
         run: npm run build
       - name: Run tests
         run: npm run test
-      - name: Release
+      - name: Check whether a release is needed
+        id: release_preflight
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const config = require('./.releaserc.json');
+          // A dry run should analyze commits without verifying npm credentials.
+          const plugins = config.plugins.map(plugin =>
+            plugin === '@semantic-release/npm' ? [plugin, { npmPublish: false }] : plugin
+          );
+          require('semantic-release')({ dryRun: true, ci: false, plugins })
+            .then(result => fs.appendFileSync(process.env.GITHUB_OUTPUT, `required=${Boolean(result)}\n`))
+            .catch(error => { console.error(error); process.exitCode = 1; });
+          NODE
+      - name: Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && steps.release_preflight.outputs.required == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
